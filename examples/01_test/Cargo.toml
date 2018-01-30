@@ -1,0 +1,13 @@
+[package]
+name    = "01_test"
+version = "0.1.0"
+authors = ["Patrick Auernig <dev.patrick.auernig@gmail.com>"]
+
+[dependencies]
+reqwest       = "0.8"
+serde         = "^1.0"
+serde_derive  = "^1.0"
+docopt        = "0.8"
+
+[dependencies.wanikani]
+path = "../../"

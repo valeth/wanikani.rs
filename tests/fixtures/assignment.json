@@ -1,0 +1,22 @@
+{
+    "id": 88214909,
+    "object": "assignment",
+    "url": "https://www.wanikani.com/api/v2/assignments/88214909",
+    "data_updated_at": "2018-01-21T19:23:58.171063Z",
+    "data": {
+        "created_at": "2017-11-26T10:00:14.628401Z",
+        "subject_id": 542,
+        "subject_type": "kanji",
+        "level": 4,
+        "srs_stage": 8,
+        "srs_stage_name": "Enlightened",
+        "unlocked_at": "2017-11-26T10:00:14.651719Z",
+        "started_at": "2017-11-27T12:28:44.093736Z",
+        "passed_at": "2017-12-01T20:13:41.075740Z",
+        "burned_at": null,
+        "available_at": "2018-05-21T18:00:00.000000Z",
+        "resurrected_at": null,
+        "passed": true,
+        "resurrected": false
+    }
+}

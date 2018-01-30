@@ -1,0 +1,14 @@
+{
+    "object": "user",
+    "url": "https://www.wanikani.com/api/v2/user",
+    "data_updated_at": "2018-01-30T16:10:33.327606Z",
+    "data": {
+        "username": "valeth",
+        "level": 11,
+        "max_level_granted_by_subscription": 60,
+        "profile_url": "https://www.wanikani.com/users/valeth",
+        "started_at": "2016-07-25T07:00:23.687659Z",
+        "subscribed": true,
+        "current_vacation_started_at": null
+    }
+}

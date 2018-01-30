@@ -3,86 +3,87 @@ use std::collections::HashMap as Map;
 
 type Time = DateTime<Utc>;
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Report<T> {
-    id:              Option<u32>,
-    object:          String,
-    url:             String,
-    data_updated_at: Time,
-    data:            T,
+    pub id:              Option<u32>,
+    pub object:          String,
+    pub url:             String,
+    pub data_updated_at: Time,
+    pub data:            T,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Collection<T> {
-    object:          String,
-    url:             String,
-    data_updated_at: Time,
-    pages:           Pages,
-    total_count:     u32,
-    data:            Vec<T>,
+    pub object:          String,
+    pub url:             String,
+    pub data_updated_at: Time,
+    pub pages:           Pages,
+    pub total_count:     u32,
+    pub data:            Vec<T>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Pages {
-    per_page:     u32,
-    next_url:     Option<String>,
-    previous_url: Option<String>
+    pub per_page:     u32,
+    pub next_url:     Option<String>,
+    pub previous_url: Option<String>
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct User {
-    username:                          String,
-    level:                             u8,
-    max_level_granted_by_subscription: u8,
-    started_at:                        Time,
-    subscribed:                        bool,
-    current_vacation_started_at:       Option<Time>,
+    pub username:                          String,
+    pub level:                             u8,
+    pub max_level_granted_by_subscription: u8,
+    pub started_at:                        Time,
+    pub subscribed:                        bool,
+    pub current_vacation_started_at:       Option<Time>,
+    pub profile_url:                       String,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Subject {
-    level:                 u8,
-    created_at:            Time,
-    slug:                  String,
-    document_url:          String,
-    characters:            Option<String>,
-    meanings:              Vec<Meaning>,
-    character_images:      Option<Vec<Map<String, String>>>, // only radicals
-    readings:              Option<Vec<Reading>>,             // only kanji, vocabulary
-    parts_of_speech:       Option<Vec<String>>,              // only vocabulary
-    component_subject_ids: Option<Vec<u32>>,
+    pub level:                 u8,
+    pub created_at:            Time,
+    pub slug:                  String,
+    pub document_url:          String,
+    pub characters:            Option<String>,
+    pub meanings:              Vec<Meaning>,
+    pub character_images:      Option<Vec<Map<String, String>>>, // only radicals
+    pub readings:              Option<Vec<Reading>>,             // only kanji, vocabulary
+    pub parts_of_speech:       Option<Vec<String>>,              // only vocabulary
+    pub component_subject_ids: Option<Vec<u32>>,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Meaning {
-    meaning: String,
-    primary: bool,
+    pub meaning: String,
+    pub primary: bool,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Reading {
     #[serde(rename="type")]
-    kind:    String,
-    primary: bool,
-    reading: String,
+    pub kind:    String,
+    pub primary: bool,
+    pub reading: String,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Assignment {
-    created_at:     Time,
-    subject_id:     u32,
-    subject_type:   String,
-    level:          u8,
-    srs_stage:      u8,
-    srs_stage_name: String,
-    unlocked_at:    Option<Time>,
-    started_at:     Option<Time>,
-    passed_at:      Option<Time>,
-    burned_at:      Option<Time>,
-    available_at:   Option<Time>,
-    resurrected_at: Option<Time>,
-    passed:         bool,
-    resurrected:    bool,
+    pub created_at:     Time,
+    pub subject_id:     u32,
+    pub subject_type:   String,
+    pub level:          u8,
+    pub srs_stage:      u8,
+    pub srs_stage_name: String,
+    pub unlocked_at:    Option<Time>,
+    pub started_at:     Option<Time>,
+    pub passed_at:      Option<Time>,
+    pub burned_at:      Option<Time>,
+    pub available_at:   Option<Time>,
+    pub resurrected_at: Option<Time>,
+    pub passed:         bool,
+    pub resurrected:    bool,
 }
 
 #[derive(Clone, Debug, Deserialize)]

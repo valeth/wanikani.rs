@@ -1,0 +1,19 @@
+[package]
+name        = "wanikani"
+version     = "0.1.0"
+authors     = ["Patrick Auernig <dev.patrick.auernig@gmail.com>"]
+description = "Unofficial client for the WaniKani API"
+license     = "MIT"
+repository  = "https://gitlab.com/valeth/wanikani.rs.git"
+homepage    = "https://gitlab.com/valeth/wanikani.rs"
+keywords    = ["api", "wanikani"]
+
+[dependencies]
+reqwest      = "0.8"
+serde        = "^1.0"
+serde_derive = "^1.0"
+serde_json   = "^1.0"
+
+[dependencies.chrono]
+version  = "0.4"
+features = ["serde"]

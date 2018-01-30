@@ -1,0 +1,12 @@
+variables:
+  CARGO_HOME: $CI_PROJECT_DIR/.cargo
+
+test:rust_1_23_0:
+  image: "rust:1.23.0"
+  environment: test
+  cache:
+    paths:
+      - target/
+      - .cargo/
+  script:
+    - cargo test --verbose --all

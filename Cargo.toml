@@ -9,10 +9,11 @@ homepage    = "https://gitlab.com/valeth/wanikani.rs"
 keywords    = ["api", "wanikani"]
 
 [dependencies]
-reqwest      = "0.8"
-serde        = "^1.0"
-serde_derive = "^1.0"
-serde_json   = "^1.0"
+reqwest          = "0.8"
+serde            = "^1.0"
+serde_derive     = "^1.0"
+serde_json       = "^1.0"
+serde_urlencoded = "0.5.1"
 
 [dependencies.chrono]
 version  = "0.4"

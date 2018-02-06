@@ -1,7 +1,10 @@
+#![feature(trace_macros)]
+
 #[macro_use]
 extern crate serde_derive;
 extern crate serde;
 extern crate serde_json;
+extern crate serde_urlencoded;
 extern crate chrono;
 extern crate reqwest;
 
@@ -9,6 +12,7 @@ mod requester;
 mod client;
 mod error;
 pub mod model;
+pub mod filters;
 
 pub use error::Error;
 pub use client::Client;

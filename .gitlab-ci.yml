@@ -5,6 +5,8 @@ test:rust_1_23_0:
   image: "rust:1.23.0"
   environment: test
   cache:
+    key: $CI_COMMIT_REF_NAME
+    untracked: true
     paths:
       - target/
       - .cargo/

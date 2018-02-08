@@ -4,59 +4,64 @@ pub const USAGE: &'static str = "
 WaniKani API test client.
 
 Usage:
-  01_test --key=<key> user
-  01_test --key=<key> assignment <assignment-id>
-  01_test --key=<key> assignments
-  01_test --key=<key> subject <subject-id>
-  01_test --key=<key> subjects
-  01_test --key=<key> review-statistic <review-statistic-id>
-  01_test --key=<key> review-statistics
-  01_test --key=<key> study-material <study-material-id>
-  01_test --key=<key> study-materials
-  01_test --key=<key> summary
-  01_test --key=<key> review <review-id>
-  01_test --key=<key> reviews
-  01_test --key=<key> level-progression <level-progression-id>
-  01_test --key=<key> level-progressions
-  01_test --key=<key> reset <reset-id>
-  01_test --key=<key> resets
-  01_test (-h | --help)
+  01_test --key=<key> <command> [<id>]
+  01_test [options]
 
 Options:
   -h, --help       Show this message
-  --key=<key>      The WaniKani API key
+  -k, --key=<key>  The WaniKani API key
+
+Commands:
+  user
+  assignment <assignment-id>
+  assignments
+  subject <subject-id>
+  subjects
+  review-statistic <review-statistic-id>
+  review-statistics
+  study-material <study-material-id>
+  study-materials
+  summary
+  review <review-id>
+  reviews
+  level-progression <level-progression-id>
+  level-progressions
+  reset <reset-id>
+  resets
 ";
+
+macro_rules! match_and_print {
+    [ @matching ($args:ident: $cmd:ident => $call:expr, $($rest:tt)+) -> ($($out:tt)*) ] => {
+        match_and_print!(@matching
+            ($args: $($rest)+) -> ($($out)* stringify!($cmd) => { println!("{:#?}", $call); },)
+        )
+    };
+    [ @matching ($args:ident: $cmd:ident => $call:expr,) -> ($($out:tt)*) ] => {
+        match $args.arg_command.as_str() {
+            $($out)*
+            stringify!($cmd) => { println!("{:#?}", $call); },
+            _ => { println!("Unknown command!"); },
+        }
+    };
+
+    [ $($body:tt)* ] => {
+        match_and_print![@matching ($($body)*) -> ()];
+    };
+}
 
 #[derive(Debug, Deserialize)]
 pub struct Args {
-    pub cmd_user: bool,
-    pub cmd_assignment: bool,
-    pub cmd_assignments: bool,
-    pub cmd_subject: bool,
-    pub cmd_subjects: bool,
-    pub cmd_review_statistic: bool,
-    pub cmd_review_statistics: bool,
-    pub cmd_study_material: bool,
-    pub cmd_study_materials: bool,
-    pub cmd_summary: bool,
-    pub cmd_review: bool,
-    pub cmd_reviews: bool,
-    pub cmd_level_progression: bool,
-    pub cmd_level_progressions: bool,
-    pub cmd_reset: bool,
-    pub cmd_resets: bool,
-    pub arg_assignment_id: u32,
-    pub arg_subject_id: u32,
-    pub arg_review_statistic_id: u32,
-    pub arg_study_material_id: u32,
-    pub arg_review_id: u32,
-    pub arg_level_progression_id: u32,
-    pub arg_reset_id: u32,
-    pub flag_key:          String,
+    pub arg_command: String,
+    pub arg_id:      Option<u32>,
+    pub flag_key:    String,
 }
 
-pub fn parse_args() -> Args {
-    Docopt::new(USAGE)
+pub fn with_args<F>(func: F)
+where F: FnOnce(&Args) -> ()
+{
+    let args = Docopt::new(USAGE)
         .and_then(|d| d.deserialize())
-        .unwrap_or_else(|e| e.exit())
+        .unwrap_or_else(|e| e.exit());
+
+    func(&args);
 }

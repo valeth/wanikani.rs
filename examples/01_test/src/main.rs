@@ -3,52 +3,34 @@ extern crate serde_derive;
 extern crate docopt;
 extern crate wanikani;
 
+#[macro_use]
 mod args;
-use args::{parse_args, Args};
+use args::with_args;
+
 use wanikani::Client as WaniKani;
 
-
-// TODO: Use some kind of macro for this, because this is ridiculous.
-fn query(wk: &WaniKani, args: &Args) {
-    if args.cmd_user {
-        println!("{:#?}", wk.user());
-    } else if args.cmd_subject {
-        println!("{:#?}", wk.subject(args.arg_subject_id.to_owned()));
-    } else if args.cmd_subjects {
-        println!("{:#?}", wk.subjects());
-    } else if args.cmd_assignment {
-        println!("{:#?}", wk.assignment(args.arg_assignment_id.to_owned()));
-    } else if args.cmd_assignments {
-        println!("{:#?}", wk.assignments());
-    } else if args.cmd_review_statistic {
-        println!("{:#?}", wk.review_statistic(args.arg_review_statistic_id.to_owned()));
-    } else if args.cmd_review_statistics {
-        println!("{:#?}", wk.review_statistics());
-    } else if args.cmd_study_material {
-        println!("{:#?}", wk.study_material(args.arg_study_material_id.to_owned()));
-    } else if args.cmd_study_materials {
-        println!("{:#?}", wk.study_materials());
-    } else if args.cmd_summary {
-        println!("{:#?}", wk.summary());
-    } else if args.cmd_review {
-        println!("{:#?}", wk.review(args.arg_review_id.to_owned()));
-    } else if args.cmd_reviews {
-        println!("{:#?}", wk.reviews());
-    } else if args.cmd_level_progression {
-        println!("{:#?}", wk.level_progression(args.arg_level_progression_id.to_owned()));
-    } else if args.cmd_level_progressions {
-        println!("{:#?}", wk.level_progressions());
-    } else if args.cmd_reset {
-        println!("{:#?}", wk.reset(args.arg_reset_id.to_owned()));
-    } else if args.cmd_resets {
-        println!("{:#?}", wk.resets());
-    }
-}
-
 fn main() {
-    let args = parse_args();
+    with_args(|args| {
+        let wk = WaniKani::configure(args.flag_key.to_owned());
+        let id = args.arg_id.unwrap_or_default().to_owned();
 
-    let wk = WaniKani::configure(args.flag_key.to_owned());
-
-    query(&wk, &args);
+        match_and_print![args:
+            user               => wk.user(),
+            summary            => wk.summary(),
+            subject            => wk.subject(id),
+            subjects           => wk.subjects(),
+            assignment         => wk.assignment(id),
+            assignments        => wk.assignments(),
+            review_statistic   => wk.review_statistic(id),
+            review_statistics  => wk.review_statistics(),
+            study_material     => wk.study_material(id),
+            study_materials    => wk.study_materials(),
+            review             => wk.review(id),
+            reviews            => wk.reviews(),
+            level_progression  => wk.level_progression(id),
+            level_progressions => wk.level_progressions(),
+            reset              => wk.reset(id),
+            resets             => wk.resets(),
+        ];
+    });
 }

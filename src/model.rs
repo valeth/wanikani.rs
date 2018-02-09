@@ -63,7 +63,7 @@ pub struct Meaning {
 #[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Reading {
     #[serde(rename="type")]
-    pub kind:    String,
+    pub kind:    Option<String>,    // only kanji
     pub primary: bool,
     pub reading: String,
 }

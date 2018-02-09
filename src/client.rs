@@ -1,20 +1,62 @@
+
 use reqwest::{Client as ReqwestClient};
 use serde::de::DeserializeOwned;
 use ::requester::WaniKaniRequester;
 use ::Error;
 use ::model::*;
+use ::filters::*;
 
 pub struct Client {
     api_key: String,
     requester: ReqwestClient,
 }
 
+macro_rules! define_request {
+    ($name:ident(id) -> $ret:ty) => {
+        pub fn $name(&self, id: u32) -> Result<Report<$ret>, Error> {
+            self.request(format!("{}s/{}", stringify!($name), id), EmptyFilter::default())
+        }
+    };
+    ($name:ident($filter:tt) -> [$ret:ty]) => {
+        pub fn $name<F>(&self, f: F) -> Result<Collection<Report<$ret>>, Error>
+        where F: FnOnce($filter) -> $filter
+        {
+            self.request(stringify!($name), f($filter::default()))
+        }
+    };
+    ($name:ident -> $ret:ty) => {
+        pub fn $name(&self) -> Result<Report<$ret>, Error> {
+            self.request(stringify!($name), EmptyFilter::default())
+        }
+    };
+}
+
+macro_rules! define_requests {
+    [ @req ($name:ident($filter:tt) -> [$ret:tt], $($rest:tt)*) -> ($($out:tt)*) ] => {
+        define_requests![@req ($($rest)*) -> (define_request!($name($filter) -> [$ret]); $($out)*)];
+    };
+    [ @req ($name:ident(id) -> $ret:tt, $($rest:tt)*) -> ($($out:tt)*) ] => {
+        define_requests![@req ($($rest)*) -> (define_request!($name(id) -> $ret); $($out)*)];
+    };
+    [ @req ($name:ident -> $ret:tt, $($rest:tt)*) -> ($($out:tt)*) ] => {
+        define_requests![@req ($($rest)*) -> (define_request!($name -> $ret); $($out)*)];
+    };
+    [ @req ($name:ident -> $ret:tt) -> ($($out:tt)*) ] => {
+        define_request!($name -> $ret); $($out)*
+    };
+
+    [ $($body:tt)* ] => {
+        define_requests!(@req ($($body)*) -> ());
+    };
+}
+
 impl Client {
-    fn request<T, S>(&self, resource: S) -> Result<T, Error>
+    fn request<T, S, F>(&self, resource: S, filter: F) -> Result<T, Error>
         where T: DeserializeOwned,
-              S: Into<String>
+              S: Into<String>,
+              F: Filter
     {
-        self.requester.api_request(&self.api_key, resource.into())
+        self.requester.api_request(&self.api_key, resource.into(), filter)
     }
 
     pub fn configure<S: Into<String>>(api_key: S) -> Client {
@@ -24,67 +66,23 @@ impl Client {
         }
     }
 
-    pub fn user(&self) -> Result<Report<User>, Error> {
-        self.request("user")
-    }
+    define_requests![
+        subject(id)                                 -> Subject,
+        review_statistic(id)                        -> ReviewStatistic,
+        assignment(id)                              -> Assignment,
+        review(id)                                  -> Review,
+        study_material(id)                          -> StudyMaterial,
+        level_progression(id)                       -> LevelProgression,
+        reset(id)                                   -> Reset,
+        subjects(SubjectsFilter)                    -> [Subject],
+        review_statistics(ReviewStatisticsFilter)   -> [ReviewStatistic],
+        assignments(AssignmentsFilter)              -> [Assignment],
+        reviews(ReviewsFilter)                      -> [Review],
+        study_materials(StudyMaterialsFilter)       -> [StudyMaterial],
+        level_progressions(LevelProgressionsFilter) -> [LevelProgression],
+        resets(ResetsFilter)                        -> [Reset],
+        summary                                     -> Summary,
+        user                                        -> User
+    ];
 
-    pub fn subjects(&self) -> Result<Collection<Report<Subject>>, Error> {
-        self.request("subjects")
-    }
-
-    pub fn subject(&self, id: u32) -> Result<Report<Subject>, Error> {
-        self.request(format!("subjects/{}", id))
-    }
-
-    pub fn assignments(&self) -> Result<Collection<Report<Assignment>>, Error> {
-        self.request("assignments")
-    }
-
-    pub fn assignment(&self, id: u32) -> Result<Report<Assignment>, Error> {
-        self.request(format!("assignments/{}", id))
-    }
-
-    pub fn review_statistic(&self, id: u32) -> Result<Report<ReviewStatistic>, Error> {
-        self.request(format!("review_statistics/{}", id))
-    }
-
-    pub fn review_statistics(&self) -> Result<Collection<Report<ReviewStatistic>>, Error> {
-        self.request("review_statistics")
-    }
-
-    pub fn study_material(&self, id: u32) -> Result<Report<StudyMaterial>, Error> {
-        self.request(format!("study_materials/{}", id))
-    }
-
-    pub fn study_materials(&self) -> Result<Collection<Report<StudyMaterial>>, Error> {
-        self.request("study_materials")
-    }
-
-    pub fn summary(&self) -> Result<Report<Summary>, Error> {
-        self.request("summary")
-    }
-
-    pub fn review(&self, id: u32) -> Result<Report<Review>, Error> {
-        self.request(format!("reviews/{}", id))
-    }
-
-    pub fn reviews(&self) -> Result<Collection<Report<Review>>, Error> {
-        self.request("reviews")
-    }
-
-    pub fn level_progression(&self, id: u32) -> Result<Report<LevelProgression>, Error> {
-        self.request(format!("level_progressions/{}", id))
-    }
-
-    pub fn level_progressions(&self) -> Result<Collection<Report<LevelProgression>>, Error> {
-        self.request("level_progressions")
-    }
-
-    pub fn reset(&self, id: u32) -> Result<Report<Reset>, Error> {
-        self.request(format!("resets/{}", id))
-    }
-
-    pub fn resets(&self) -> Result<Collection<Report<Reset>>, Error> {
-        self.request("resets")
-    }
 }

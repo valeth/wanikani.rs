@@ -1,18 +1,24 @@
+use std::fmt::Debug;
+use serde::Serialize;
 use serde_urlencoded;
 
 type SerializationError = serde_urlencoded::ser::Error;
 
+pub trait Filter: Serialize + Debug {
+    fn encode(&self) -> Result<String, SerializationError>;
+}
+
 macro_rules! define_filter_function {
     ($name:ident -> Vec<$type:ty>) => {
-        pub fn $name<S>(mut self, values: Vec<S>) -> Self
+        pub fn $name<S>(mut self, values: &Vec<S>) -> Self
         where S: ToString
         {
-            self.$name = Some(vec_to_string(values));
+            self.$name = Some(vec_to_string(&values));
             self
         }
     };
     ($name:ident -> String) => {
-        pub fn $name<S>(mut self, value: S) -> Self
+        pub fn $name<S>(mut self, value: &S) -> Self
         where S: ToString
         {
             self.$name = Some(value.to_string());
@@ -20,8 +26,8 @@ macro_rules! define_filter_function {
         }
     };
     ($name:ident -> $type:ty) => {
-        pub fn $name(mut self, value: $type) -> Self {
-            self.$name = Some(value);
+        pub fn $name(mut self, value: &$type) -> Self {
+            self.$name = Some(*value);
             self
         }
     };
@@ -42,6 +48,7 @@ macro_rules! define_filter {
         #[derive(Debug, Default, Serialize)]
         pub struct $name { $($out)* }
     };
+
     ( @im ($name:ident $field:ident => Vec<$type:tt>, $($rest:tt)*) -> ($($out:tt)*) ) => {
         define_filter!(@im
             ($name $($rest)*) -> (define_filter_function!($field -> Vec<$type>); $($out)*)
@@ -55,9 +62,11 @@ macro_rules! define_filter {
     ( @im ($name:ident) -> ($($out:tt)*) ) => {
         impl $name {
             $($out)*
+        }
 
-            pub fn encode(self) -> Result<String, SerializationError> {
-                serde_urlencoded::to_string(&self)
+        impl Filter for $name {
+            fn encode(&self) -> Result<String, SerializationError> {
+                serde_urlencoded::to_string(self)
             }
         }
     };
@@ -126,7 +135,11 @@ define_filter!(ResetsFilter
     updated_after => String,
 );
 
-fn vec_to_string<S>(v: Vec<S>) -> String
+define_filter!(EmptyFilter
+    nil           => bool,
+);
+
+fn vec_to_string<S>(v: &Vec<S>) -> String
 where S: ToString
 {
     v.iter()
@@ -144,7 +157,7 @@ mod tests {
     #[test]
     fn empty_filter() {
         assert_eq!(
-            SubjectsFilter::default().encode(),
+            EmptyFilter::default().encode(),
             Ok("".to_string())
         );
     }

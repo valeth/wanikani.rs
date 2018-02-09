@@ -88,69 +88,69 @@ pub struct Assignment {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct ReviewStatistic {
-    created_at:             Time,
-    subject_id:             u32,
-    meaning_correct:        u32,
-    meaning_incorrect:      u32,
-    meaning_max_streak:     u32,
-    meaning_current_streak: u32,
-    reading_correct:        u32,
-    reading_incorrect:      u32,
-    reading_max_streak:     u32,
-    reading_current_streak: u32,
-    percentage_correct:     u32,
+    pub created_at:             Time,
+    pub subject_id:             u32,
+    pub meaning_correct:        u32,
+    pub meaning_incorrect:      u32,
+    pub meaning_max_streak:     u32,
+    pub meaning_current_streak: u32,
+    pub reading_correct:        u32,
+    pub reading_incorrect:      u32,
+    pub reading_max_streak:     u32,
+    pub reading_current_streak: u32,
+    pub percentage_correct:     u32,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct StudyMaterial {
-    created_at:       Time,
-    subject_id:       u32,
-    subject_type:     String,
-    meaning_note:     Option<String>,
-    reading_note:     Option<String>,
-    meaning_synonyms: Vec<String>,
+    pub created_at:       Time,
+    pub subject_id:       u32,
+    pub subject_type:     String,
+    pub meaning_note:     Option<String>,
+    pub reading_note:     Option<String>,
+    pub meaning_synonyms: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Summary {
-    reviews: Vec<SummaryItem>,
-    lessons: Vec<SummaryItem>,
+    pub reviews: Vec<SummaryItem>,
+    pub lessons: Vec<SummaryItem>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
-struct SummaryItem {
-    available_at: Time,
-    subject_ids:  Vec<u32>,
+pub struct SummaryItem {
+    pub available_at: Time,
+    pub subject_ids:  Vec<u32>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Review {
-    created_at:                Time,
-    assignment_id:             u32,
-    subject_id:                u32,
-    starting_srs_stage:        u32,
-    starting_srs_stage_name:   String,
-    ending_srs_stage:          u32,
-    ending_srs_stage_name:     String,
-    incorrect_meaning_answers: Option<u32>,
-    incorrect_reading_answers: Option<u32>,
+    pub created_at:                Time,
+    pub assignment_id:             u32,
+    pub subject_id:                u32,
+    pub starting_srs_stage:        u32,
+    pub starting_srs_stage_name:   String,
+    pub ending_srs_stage:          u32,
+    pub ending_srs_stage_name:     String,
+    pub incorrect_meaning_answers: Option<u32>,
+    pub incorrect_reading_answers: Option<u32>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct LevelProgression {
-    level:        u8,
-    created_at:   Time,
-    unlocked_at:  Option<Time>,
-    started_at:   Option<Time>,
-    passed_at:    Option<Time>,
-    completed_at: Option<Time>,
-    abandoned_at: Option<Time>,
+    pub level:        u8,
+    pub created_at:   Time,
+    pub unlocked_at:  Option<Time>,
+    pub started_at:   Option<Time>,
+    pub passed_at:    Option<Time>,
+    pub completed_at: Option<Time>,
+    pub abandoned_at: Option<Time>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Reset {
-    created_at:     Time,
-    original_level: u8,
-    target_level:   u8,
-    confirmed_at:   Time,
+    pub created_at:     Time,
+    pub original_level: u8,
+    pub target_level:   u8,
+    pub confirmed_at:   Time,
 }

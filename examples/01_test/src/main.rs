@@ -17,8 +17,8 @@ fn main() {
         println!("{:#?}", user);
 
         let subjects1 = wk.subjects(|f| f
-            .levels(&vec![1])
-            .types(&vec!["kanji"]));
+            .levels(vec![1])
+            .types(vec!["kanji"]));
         
         println!("{:#?}", subjects1);
 

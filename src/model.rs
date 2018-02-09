@@ -8,7 +8,7 @@ pub struct Report<T> {
     pub id:              Option<u32>,
     pub object:          String,
     pub url:             String,
-    pub data_updated_at: Time,
+    pub data_updated_at: Option<Time>,
     pub data:            T,
 }
 
@@ -16,7 +16,7 @@ pub struct Report<T> {
 pub struct Collection<T> {
     pub object:          String,
     pub url:             String,
-    pub data_updated_at: Time,
+    pub data_updated_at: Option<Time>,
     pub pages:           Pages,
     pub total_count:     u32,
     pub data:            Vec<T>,

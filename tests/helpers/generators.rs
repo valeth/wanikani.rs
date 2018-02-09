@@ -50,17 +50,17 @@ pub fn gen_subject() -> Report<Subject> {
             ],
             readings: Some(vec![
                 Reading {
-                    kind: "onyomi".to_string(),
+                    kind: Some("onyomi".to_string()),
                     primary: true,
                     reading: "へい".to_string(),
                 },
                 Reading {
-                    kind: "onyomi".to_string(),
+                    kind: Some("onyomi".to_string()),
                     primary: true,
                     reading: "ひょう".to_string(),
                 },
                 Reading {
-                    kind: "kunyomi".to_string(),
+                    kind: Some("kunyomi".to_string()),
                     primary: false,
                     reading: "None".to_string(),
                 }

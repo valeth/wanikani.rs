@@ -10,15 +10,15 @@ pub trait Filter: Serialize + Debug {
 
 macro_rules! define_filter_function {
     ($name:ident -> Vec<$type:ty>) => {
-        pub fn $name<S>(mut self, values: &Vec<S>) -> Self
+        pub fn $name<S>(mut self, values: Vec<S>) -> Self
         where S: ToString
         {
-            self.$name = Some(vec_to_string(&values));
+            self.$name = Some(vec_to_string(values));
             self
         }
     };
     ($name:ident -> String) => {
-        pub fn $name<S>(mut self, value: &S) -> Self
+        pub fn $name<S>(mut self, value: S) -> Self
         where S: ToString
         {
             self.$name = Some(value.to_string());
@@ -26,8 +26,8 @@ macro_rules! define_filter_function {
         }
     };
     ($name:ident -> $type:ty) => {
-        pub fn $name(mut self, value: &$type) -> Self {
-            self.$name = Some(*value);
+        pub fn $name(mut self, value: $type) -> Self {
+            self.$name = Some(value);
             self
         }
     };
@@ -139,7 +139,7 @@ define_filter!(EmptyFilter
     nil           => bool,
 );
 
-fn vec_to_string<S>(v: &Vec<S>) -> String
+fn vec_to_string<S>(v: Vec<S>) -> String
 where S: ToString
 {
     v.iter()

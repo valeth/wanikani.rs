@@ -165,10 +165,10 @@ mod tests {
     #[test]
     fn subjects_filter() {
         let filter = SubjectsFilter::default()
-            .ids(vec![13,21,53])
-            .types(vec![3,10,11])
-            .slugs(vec!["this-is", "a-great", "s-l-u-g"])
-            .levels(vec![1,2,3])
+            .ids(&[13,21,53])
+            .types(&[3,10,11])
+            .slugs(&["this-is", "a-great", "s-l-u-g"])
+            .levels(&[1,2,3])
             .updated_after("2018-01-21T19:23:58.171063Z");
 
         assert_eq!(&filter.ids, &Some(String::from("13,21,53")));
@@ -189,11 +189,11 @@ mod tests {
     #[test]
     fn assignments_filter() {
         let query = AssignmentsFilter::default()
-            .ids(vec![11,20,100])
-            .subject_ids(vec![10,14,30])
-            .subject_types(vec![20,42,120])
-            .levels(vec![1,2,3])
-            .srs_stages(vec![1,2,3])
+            .ids(&[11,20,100])
+            .subject_ids(&[10,14,30])
+            .subject_types(&[20,42,120])
+            .levels(&[1,2,3])
+            .srs_stages(&[1,2,3])
             .unlocked(true)
             .started(true)
             .passed(true)
@@ -227,9 +227,9 @@ mod tests {
     #[test]
     fn review_statistics_filter() {
         let query = ReviewStatisticsFilter::default()
-            .ids(vec![12,22,32])
-            .subject_ids(vec![3,1,101])
-            .subject_types(vec!["vocabulary"])
+            .ids(&[12,22,32])
+            .subject_ids(&[3,1,101])
+            .subject_types(&["vocabulary"])
             .updated_after("2018-01-21T19:23:58.171063Z")
             .percentages_greater_than(70)
             .percentages_less_than(90)
@@ -249,9 +249,9 @@ mod tests {
     #[test]
     fn study_materials_filter() {
         let query = StudyMaterialsFilter::default()
-            .ids(vec![2,4,1])
-            .subject_ids(vec![123,111,11,32])
-            .subject_types(vec!["kanji", "radicals"])
+            .ids(&[2,4,1])
+            .subject_ids(&[123,111,11,32])
+            .subject_types(&["kanji", "radicals"])
             .updated_after("2018-01-21T19:23:58.171063Z")
             .encode();
         
@@ -267,9 +267,9 @@ mod tests {
     #[test]
     fn reviews_filter() {
         let query = ReviewsFilter::default()
-            .ids(vec![3,1,5])
-            .assignment_ids(vec![11,14,112])
-            .subject_ids(vec![13,112,1,3])
+            .ids(&[3,1,5])
+            .assignment_ids(&[11,14,112])
+            .subject_ids(&[13,112,1,3])
             .updated_after("2018-01-21T19:23:58.171063Z")
             .encode();
 
@@ -285,7 +285,7 @@ mod tests {
     #[test]
     fn level_progressions_filter() {
         let query = LevelProgressionsFilter::default()
-            .ids(vec![12,3,4,1])
+            .ids(&[12,3,4,1])
             .updated_after("2018-01-21T19:23:58.171063Z")
             .encode();
 
@@ -299,7 +299,7 @@ mod tests {
     #[test]
     fn resets_filter() {
         let query = ResetsFilter::default()
-            .ids(vec![10,80,9,12,14])
+            .ids(&[10,80,9,12,14])
             .updated_after("2018-01-21T19:23:58.171063Z")
             .encode();
 

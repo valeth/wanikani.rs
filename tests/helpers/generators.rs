@@ -15,7 +15,7 @@ fn maybe_date(datestr: &str) -> Option<DateTime<Utc>> {
 pub fn gen_user() -> Report<User> {
     Report {
         id: None,
-        object: "user".to_string(),
+        object: ObjectType::User,
         url: "https://www.wanikani.com/api/v2/user".to_string(),
         data_updated_at: maybe_date("2018-01-30T16:10:33.327606Z"),
         data: User {
@@ -33,41 +33,36 @@ pub fn gen_user() -> Report<User> {
 pub fn gen_subject() -> Report<Subject> {
     Report {
         id: Some(1000),
-        object: "kanji".to_string(),
+        object: ObjectType::Kanji,
         url: "https://www.wanikani.com/api/v2/subjects/1000".to_string(),
         data_updated_at: maybe_date("2017-10-04T18:56:28.019412Z"),
-        data: Subject {
+        data: Subject::Kanji {
             level: 17,
             created_at: date("2012-10-30T19:49:28.123286Z"),
             slug:"兵".to_string(),
             document_url: "https://www.wanikani.com/kanji/%E5%85%B5".to_string(),
-            characters: Some("兵".to_string()),
+            characters: "兵".to_string(),
             meanings: vec![
                 Meaning {
                     meaning: "Soldier".to_string(),
                     primary: true,
                 }
             ],
-            readings: Some(vec![
-                Reading {
-                    kind: Some("onyomi".to_string()),
+            readings: vec![
+                KanjiReading::Onyomi {
                     primary: true,
                     reading: "へい".to_string(),
                 },
-                Reading {
-                    kind: Some("onyomi".to_string()),
+                KanjiReading::Onyomi {
                     primary: true,
                     reading: "ひょう".to_string(),
                 },
-                Reading {
-                    kind: Some("kunyomi".to_string()),
+                KanjiReading::Kunyomi {
                     primary: false,
                     reading: "None".to_string(),
                 }
-            ]),
-            component_subject_ids: Some(vec![115, 2, 1]),
-            parts_of_speech: None,
-            character_images: None,
+            ],
+            component_subject_ids: vec![115, 2, 1],
         }
     }
 }
@@ -75,7 +70,7 @@ pub fn gen_subject() -> Report<Subject> {
 pub fn gen_assignment() -> Report<Assignment> {
     Report {
         id: Some(88214909),
-        object: "assignment".to_string(),
+        object: ObjectType::Assignment,
         url: "https://www.wanikani.com/api/v2/assignments/88214909".to_string(),
         data_updated_at: maybe_date("2018-01-21T19:23:58.171063Z"),
         data: Assignment {

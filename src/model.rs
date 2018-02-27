@@ -35,7 +35,7 @@ pub struct Collection<T> {
     pub data_updated_at: Option<Time>,
     pub pages:           Pages,
     pub total_count:     u32,
-    pub data:            Vec<T>,
+    pub data:            Vec<Report<T>>,
 }
 
 #[derive(Clone, Debug, Deserialize)]

@@ -18,7 +18,7 @@ macro_rules! define_request {
         }
     };
     ($name:ident($filter:tt) -> [$ret:ty]) => {
-        pub fn $name<F>(&self, f: F) -> Result<Collection<Report<$ret>>, Error>
+        pub fn $name<F>(&self, f: F) -> Result<Collection<$ret>, Error>
         where F: FnOnce($filter) -> $filter
         {
             self.request(stringify!($name), f($filter::default()))

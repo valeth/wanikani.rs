@@ -32,4 +32,3 @@ fn build_headers(api_key: String) -> Headers {
     headers.set(Authorization(Bearer { token: api_key }));
     return headers;
 }
-

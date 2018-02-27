@@ -6,6 +6,8 @@ extern crate serde_urlencoded;
 extern crate chrono;
 extern crate reqwest;
 
+mod test_helpers;
+
 mod requester;
 mod client;
 mod error;

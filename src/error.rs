@@ -29,4 +29,3 @@ impl From<ReqwestUrlError> for Error {
 }
 
 pub type Result<T> = result::Result<T, Error>;
-

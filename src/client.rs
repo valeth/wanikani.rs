@@ -2,8 +2,8 @@
 use reqwest::{Client as ReqwestClient};
 use serde::de::DeserializeOwned;
 use ::requester::WaniKaniRequester;
-use ::Error;
-use ::model::*;
+use ::Result;
+use ::model::prelude::*;
 use ::filters::*;
 
 pub struct Client {
@@ -13,19 +13,19 @@ pub struct Client {
 
 macro_rules! define_request {
     ($name:ident(id) -> $ret:ty) => {
-        pub fn $name(&self, id: u32) -> Result<Report<$ret>, Error> {
+        pub fn $name(&self, id: u32) -> Result<Report<$ret>> {
             self.request(format!("{}s/{}", stringify!($name), id), EmptyFilter::default())
         }
     };
     ($name:ident($filter:tt) -> [$ret:ty]) => {
-        pub fn $name<F>(&self, f: F) -> Result<Collection<$ret>, Error>
+        pub fn $name<F>(&self, f: F) -> Result<Collection<$ret>>
         where F: FnOnce($filter) -> $filter
         {
             self.request(stringify!($name), f($filter::default()))
         }
     };
     ($name:ident -> $ret:ty) => {
-        pub fn $name(&self) -> Result<Report<$ret>, Error> {
+        pub fn $name(&self) -> Result<Report<$ret>> {
             self.request(stringify!($name), EmptyFilter::default())
         }
     };
@@ -51,7 +51,7 @@ macro_rules! define_requests {
 }
 
 impl Client {
-    fn request<T, S, F>(&self, resource: S, filter: F) -> Result<T, Error>
+    fn request<T, S, F>(&self, resource: S, filter: F) -> Result<T>
         where T: DeserializeOwned,
               S: Into<String>,
               F: Filter

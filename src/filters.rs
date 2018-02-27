@@ -1,11 +1,16 @@
-use std::fmt::Debug;
 use serde::Serialize;
 use serde_urlencoded;
 
 type SerializationError = serde_urlencoded::ser::Error;
 
-pub trait Filter: Serialize + Debug {
-    fn encode(&self) -> Result<String, SerializationError>;
+pub trait Filter: Serialize + Default {
+    fn encode(&self) -> Result<String, SerializationError> {
+        serde_urlencoded::to_string(self)
+    }
+
+    fn new() -> Self {
+        Self::default()
+    }
 }
 
 macro_rules! define_filter_function {
@@ -64,13 +69,9 @@ macro_rules! define_filter {
             $($out)*
         }
 
-        impl Filter for $name {
-            fn encode(&self) -> Result<String, SerializationError> {
-                serde_urlencoded::to_string(self)
-            }
-        }
+        impl Filter for $name {}
     };
-    
+
     [ $($body:tt)* ] => {
         define_filter!(@st ($($body)*) -> ());
         define_filter!(@im ($($body)*) -> ());
@@ -157,14 +158,14 @@ mod tests {
     #[test]
     fn empty_filter() {
         assert_eq!(
-            EmptyFilter::default().encode(),
+            EmptyFilter::new().encode(),
             Ok("".to_string())
         );
     }
 
     #[test]
     fn subjects_filter() {
-        let filter = SubjectsFilter::default()
+        let filter = SubjectsFilter::new()
             .ids(&[13,21,53])
             .types(&[3,10,11])
             .slugs(&["this-is", "a-great", "s-l-u-g"])
@@ -188,7 +189,7 @@ mod tests {
 
     #[test]
     fn assignments_filter() {
-        let query = AssignmentsFilter::default()
+        let query = AssignmentsFilter::new()
             .ids(&[11,20,100])
             .subject_ids(&[10,14,30])
             .subject_types(&[20,42,120])
@@ -226,7 +227,7 @@ mod tests {
 
     #[test]
     fn review_statistics_filter() {
-        let query = ReviewStatisticsFilter::default()
+        let query = ReviewStatisticsFilter::new()
             .ids(&[12,22,32])
             .subject_ids(&[3,1,101])
             .subject_types(&["vocabulary"])
@@ -248,13 +249,13 @@ mod tests {
 
     #[test]
     fn study_materials_filter() {
-        let query = StudyMaterialsFilter::default()
+        let query = StudyMaterialsFilter::new()
             .ids(&[2,4,1])
             .subject_ids(&[123,111,11,32])
             .subject_types(&["kanji", "radicals"])
             .updated_after("2018-01-21T19:23:58.171063Z")
             .encode();
-        
+
         assert_eq!(
             query,
             Ok("updated_after=2018-01-21T19%3A23%3A58.171063Z\
@@ -266,7 +267,7 @@ mod tests {
 
     #[test]
     fn reviews_filter() {
-        let query = ReviewsFilter::default()
+        let query = ReviewsFilter::new()
             .ids(&[3,1,5])
             .assignment_ids(&[11,14,112])
             .subject_ids(&[13,112,1,3])
@@ -284,7 +285,7 @@ mod tests {
 
     #[test]
     fn level_progressions_filter() {
-        let query = LevelProgressionsFilter::default()
+        let query = LevelProgressionsFilter::new()
             .ids(&[12,3,4,1])
             .updated_after("2018-01-21T19:23:58.171063Z")
             .encode();
@@ -298,7 +299,7 @@ mod tests {
 
     #[test]
     fn resets_filter() {
-        let query = ResetsFilter::default()
+        let query = ResetsFilter::new()
             .ids(&[10,80,9,12,14])
             .updated_after("2018-01-21T19:23:58.171063Z")
             .encode();

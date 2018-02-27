@@ -3,10 +3,36 @@ extern crate serde_derive;
 extern crate docopt;
 extern crate wanikani;
 
-mod args;
-use args::with_args;
-
+use docopt::Docopt;
 use wanikani::Client as WaniKani;
+
+// Just some boilerplate to read the API key
+pub const USAGE: &'static str = "
+WaniKani API test client.
+
+Usage:
+  01_test --key=<key>
+  01_test [options]
+
+Options:
+  -h, --help       Show this message
+  -k, --key=<key>  The WaniKani API key
+";
+
+#[derive(Debug, Deserialize)]
+struct Args {
+    pub flag_key: String,
+}
+
+fn with_args<F>(func: F)
+where F: FnOnce(&Args) -> ()
+{
+    let args = Docopt::new(USAGE)
+        .and_then(|d| d.deserialize())
+        .unwrap_or_else(|e| e.exit());
+
+    func(&args);
+}
 
 fn main() {
     with_args(|args| {

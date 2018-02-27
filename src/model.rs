@@ -57,17 +57,38 @@ pub struct User {
 }
 
 #[derive(Clone, PartialEq, Debug, Deserialize)]
-pub struct Subject {
-    pub level:                 u8,
-    pub created_at:            Time,
-    pub slug:                  String,
-    pub document_url:          String,
-    pub characters:            Option<String>,
-    pub meanings:              Vec<Meaning>,
-    pub character_images:      Option<Vec<Map<String, String>>>, // only radicals
-    pub readings:              Option<Vec<Reading>>,             // only kanji, vocabulary
-    pub parts_of_speech:       Option<Vec<String>>,              // only vocabulary
-    pub component_subject_ids: Option<Vec<u32>>,
+#[serde(untagged)]
+pub enum Subject {
+    Kanji {
+        level: u8,
+        created_at: Time,
+        slug: String,
+        document_url: String,
+        characters: String,
+        meanings: Vec<Meaning>,
+        readings: Vec<KanjiReading>,
+        component_subject_ids: Vec<u32>,
+    },
+    Vocabulary {
+        level: u8,
+        created_at: Time,
+        slug: String,
+        document_url: String,
+        characters: String,
+        meanings: Vec<Meaning>,
+        readings: Vec<VocabularyReading>,
+        parts_of_speech: Vec<String>,
+        component_subject_ids: Vec<u32>,
+    },
+    Radical {
+        level: u8,
+        created_at: Time,
+        slug: String,
+        document_url: String,
+        characters: Option<String>,
+        meanings: Vec<Meaning>,
+        character_images: Option<Vec<Map<String, String>>>,
+    }
 }
 
 #[derive(Clone, PartialEq, Debug, Deserialize)]
@@ -77,11 +98,17 @@ pub struct Meaning {
 }
 
 #[derive(Clone, PartialEq, Debug, Deserialize)]
-pub struct Reading {
-    #[serde(rename="type")]
-    pub kind:    Option<String>,    // only kanji
-    pub primary: bool,
-    pub reading: String,
+#[serde(tag = "type", rename_all = "snake_case")]
+pub enum KanjiReading {
+    Onyomi  { primary: bool, reading: String },
+    Kunyomi { primary: bool, reading: String },
+    Nanori  { primary: bool, reading: String },
+}
+
+#[derive(Clone, PartialEq, Debug, Deserialize)]
+pub struct VocabularyReading {
+    primary: bool,
+    reading: String,
 }
 
 #[derive(Clone, PartialEq, Debug, Deserialize)]

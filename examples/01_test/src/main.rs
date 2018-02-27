@@ -12,18 +12,18 @@ fn main() {
     with_args(|args| {
         let wk = WaniKani::configure(args.flag_key.to_owned());
 
-        let user = wk.user();
+        if let Ok(user) = wk.user() {
+            println!("{:#?}", user);
+        };
 
-        println!("{:#?}", user);
+        if let Ok(subjects1) = wk.subjects(|f| f.levels(&[1, 2, 3]).types(&["kanji", "vocabulary", "radical"]))
+        {
 
-        let subjects1 = wk.subjects(|f| f
-            .levels(&[1, 2, 3])
-            .types(&["kanji", "vocabulary"]));
-        
-        println!("{:#?}", subjects1);
+            println!("{:#?}", subjects1);
+        };
 
-        let assignment = wk.assignment(88214909);
-
-        println!("{:#?}", assignment);
+        if let Ok(assignment1) = wk.assignment(88214909) {
+            println!("{:#?}", assignment1);
+        };
     });
 }

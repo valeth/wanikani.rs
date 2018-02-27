@@ -6,10 +6,26 @@ type Time = DateTime<Utc>;
 #[derive(Clone, PartialEq, Debug, Deserialize)]
 pub struct Report<T> {
     pub id:              Option<u32>,
-    pub object:          String,
+    pub object:          ObjectType,
     pub url:             String,
     pub data_updated_at: Option<Time>,
     pub data:            T,
+}
+
+#[derive(Clone, PartialEq, Debug, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ObjectType {
+    User,
+    Kanji,
+    Vocabulary,
+    Radical,
+    Assignment,
+    ReviewStatistic,
+    StudyMaterial,
+    Summary,
+    Review,
+    LevelProgression,
+    Reset,
 }
 
 #[derive(Clone, Debug, Deserialize)]

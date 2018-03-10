@@ -47,6 +47,15 @@ pub struct Collection<T> {
     pub data:            Vec<Report<T>>,
 }
 
+impl<T> IntoIterator for Collection<T> {
+    type Item = Report<T>;
+    type IntoIter = ::std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.data.into_iter()
+    }
+}
+
 #[derive(Clone, Debug, Deserialize)]
 pub struct Pages {
     pub per_page:     u32,

@@ -18,4 +18,4 @@ pub use error::Error;
 pub use error::Result;
 pub use client::Client;
 
-pub const BASE_URL: &'static str = "https://www.wanikani.com/api/v2";
+pub const BASE_URL: &'static str = "https://api.wanikani.com/v2";

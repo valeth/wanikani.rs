@@ -1,6 +1,6 @@
 [package]
 name        = "wanikani"
-version     = "0.1.2"
+version     = "0.1.3"
 authors     = ["Patrick Auernig <dev.patrick.auernig@gmail.com>"]
 description = "Unofficial client for the WaniKani API"
 license     = "MIT"

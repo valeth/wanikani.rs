@@ -7,6 +7,7 @@ license     = "MIT"
 repository  = "https://gitlab.com/valeth/wanikani.rs.git"
 homepage    = "https://gitlab.com/valeth/wanikani.rs"
 keywords    = ["api", "wanikani"]
+readme      = "README.md"
 
 [dependencies]
 reqwest          = "0.8"
